@@ -156,3 +156,5 @@ else
 Toast.makeText(this, "Toggle Button is OFF", Toast.LENGTH_LONG).show()
 }
 } 
+}
+}

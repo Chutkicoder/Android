@@ -1,0 +1,262 @@
+Aim: Write an Android program to demonstrate the working of Notifications. 
+Practical No. 7 
+ 
+Aim: Programs on Services, Notification and Broadcast Receivers. 
+ 
+ 
+activity_main.xml 
+ 
+<?xml version="1.0" encoding="utf-8"?> 
+<RelativeLayout android:layout_height="match_parent" 
+android:layout_width="match_parent" 
+xmlns:android="http://schemas.android.com/apk/res/android"> 
+ 
+<Button 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:id="@+id/btnClick" 
+android:text="Click Me" 
+android:layout_centerInParent="true" 
+android:textSize="25dp"/> 
+</RelativeLayout> 
+ 
+activity_main2.xml 
+ 
+<?xml version="1.0" encoding="utf-8"?> 
+<RelativeLayout android:layout_height="match_parent" 
+android:layout_width="match_parent" 
+xmlns:android="http://schemas.android.com/apk/res/android" > 
+ 
+<TextView 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:id="@+id/tv" 
+android:text="Notification Page" 
+android:textSize="25dp" 
+android:layout_centerInParent="true"/> 
+</RelativeLayout> 
+ 
+AndroidManifest.xml 
+ 
+<?xml version="1.0" encoding="utf-8"?> 
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:tools="http://schemas.android.com/tools"> 
+ 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> 
+    <application 
+        android:allowBackup="true" 
+        android:dataExtractionRules="@xml/data_extraction_rules" 
+        android:fullBackupContent="@xml/backup_rules" 
+        android:icon="@mipmap/ic_launcher" 
+        android:label="@string/app_name" 
+        android:roundIcon="@mipmap/ic_launcher_round" 
+        android:supportsRtl="true" 
+        android:theme="@style/Theme.Final2"> 
+    <activity 
+            android:name=".MainActivity2" 
+            android:exported="false" /> 
+        <activity 
+            android:name=".MainActivity" 
+            android:exported="true"> 
+            <intent-filter> 
+                <action android:name="android.intent.action.MAIN" /> 
+ 
+                <category android:name="android.intent.category.LAUNCHER" /> 
+            </intent-filter> 
+        </activity> 
+    </application> 
+ 
+</manifest> 
+ 
+ 
+MainActivity.kt 
+ 
+package com.example.myapplication 
+ 
+import android.annotation.SuppressLint 
+import android.app.Notification 
+import android.app.NotificationChannel 
+import android.app.NotificationManager 
+import android.app.PendingIntent 
+import android.content.Context 
+import android.content.Intent 
+import android.graphics.Color 
+import android.os.Build 
+import androidx.appcompat.app.AppCompatActivity 
+import android.os.Bundle 
+import android.widget.Button 
+ 
+class MainActivity : AppCompatActivity() { 
+lateinit var btnClick: Button 
+lateinit var notificationManager: NotificationManager 
+lateinit var notificationChannel: NotificationChannel 
+lateinit var builder: Notification.Builder 
+private val channelId = "12345" 
+private val description = "Test Notification" 
+ 
+@SuppressLint("MissingInflatedId") 
+override fun onCreate(savedInstanceState: Bundle?) { 
+super.onCreate(savedInstanceState) 
+setContentView(R.layout.activity_main) 
+ 
+btnClick = findViewById(R.id.btnClick) 
+notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as 
+NotificationManager 
+ 
+ 
+btnClick.setOnClickListener { 
+val intent = Intent(this, MainActivity2::class.java) 
+val pendingIntent = PendingIntent.getActivity(this, 0, intent, 
+PendingIntent.FLAG_IMMUTABLE) 
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { 
+notificationChannel = NotificationChannel(channelId, description, 
+NotificationManager.IMPORTANCE_HIGH) 
+notificationChannel.lightColor = Color.BLUE 
+notificationChannel.enableVibration(true) 
+notificationManager.createNotificationChannel(notificationChannel) 
+builder = Notification.Builder(this, channelId) 
+.setContentTitle("NOTIFICATION USING KOTLIN") 
+.setContentText("Test Notification") 
+.setSmallIcon(R.drawable.ic_launcher_background) 
+.setContentIntent(pendingIntent) 
+} 
+notificationManager.notify(1234, builder.build()) 
+} 
+} 
+} 
+if error use this:
+activitymain.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnClick"
+        android:text="Click Me"
+        android:layout_centerInParent="true"
+        android:textSize="25dp"/>
+</RelativeLayout>
+
+activitymain2.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv"
+        android:text="Notification Page"
+        android:textSize="25dp"
+        android:layout_centerInParent="true"/>
+</RelativeLayout>
+
+manifest.xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyApplication">
+        <activity
+            android:name=".MainActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
+
+mainactivity.kt
+
+package com.example.myapplication
+
+import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.Button
+
+class MainActivity : AppCompatActivity() {
+    lateinit var btnClick: Button
+    lateinit var notificationManager: NotificationManager
+    lateinit var notificationChannel: NotificationChannel
+    lateinit var builder: Notification.Builder
+    private val channelId = "12345"
+    private val description = "Test Notification"
+
+    @SuppressLint("MissingInflatedId")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        btnClick = findViewById(R.id.btnClick)
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as
+                NotificationManager
+
+
+        btnClick.setOnClickListener {
+            val intent = Intent(this, MainActivity2::class.java)
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_IMMUTABLE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationChannel = NotificationChannel(channelId, description,
+                    NotificationManager.IMPORTANCE_HIGH)
+                notificationChannel.lightColor = Color.BLUE
+                notificationChannel.enableVibration(true)
+                notificationManager.createNotificationChannel(notificationChannel)
+                builder = Notification.Builder(this, channelId)
+                    .setContentTitle("NOTIFICATION USING KOTLIN")
+                    .setContentText("Test Notification")
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentIntent(pendingIntent)
+            }
+            notificationManager.notify(1234, builder.build())
+        }
+    }
+}
+mainactivity2.kt
+package com.example.myapplication
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity2 : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main2)
+    }
+}
+}
+
+
+
+ 

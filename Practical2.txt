@@ -49,3 +49,8 @@ class MainActivity : AppCompatActivity() {
 }
 
 //Click on Logcat from side then run
+Action	Logcat Output
+Open app	     onStart(), onResume()
+Press Home	     onPause(), onStop()
+Return to app	 onRestart(), onStart(), onResume()
+Close app	     onPause(), onStop(), onDestroy()

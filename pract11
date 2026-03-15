@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Display Screen -->
+    <TextView
+        android:id="@+id/tvDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="0"
+        android:textSize="32sp"
+        android:gravity="end|center_vertical"
+        android:background="#EEEEEE"
+        android:padding="16dp" />
+
+    <!-- Calculator Buttons -->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:columnCount="4">
+
+        <Button
+            android:id="@+id/btn7"
+            android:text="7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btn8"
+            android:text="8"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btn9"
+            android:text="9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btnDiv"
+            android:text="/"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btn4"
+            android:text="4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btn5"
+            android:text="5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btn6"
+            android:text="6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btnMul"
+            android:text="*"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btn1"
+            android:text="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btn2"
+            android:text="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btn3"
+            android:text="3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btnSub"
+            android:text="-"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btn0"
+            android:text="0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btnDot"
+            android:text="."
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btnEqual"
+            android:text="="
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:text="+"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"/>
+
+        <Button
+            android:id="@+id/btnClear"
+            android:text="C"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="4"/>
+
+    </GridLayout>
+
+</LinearLayout>
+
+activity.kt
+package com.example.myapplication
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var display: TextView
+    private var firstNumber = 0.0
+    private var operation = ""
+    private var isNewNumber = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main2)
+
+        display = findViewById(R.id.tvDisplay)
+
+        val numberButtons = listOf(
+            R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3,
+            R.id.btn4, R.id.btn5, R.id.btn6,
+            R.id.btn7, R.id.btn8, R.id.btn9
+        )
+
+        for (id in numberButtons) {
+            findViewById<Button>(id).setOnClickListener {
+                onNumberClick((it as Button).text.toString())
+            }
+        }
+
+        findViewById<Button>(R.id.btnAdd).setOnClickListener {
+            onOperatorClick("+")
+        }
+
+        findViewById<Button>(R.id.btnSub).setOnClickListener {
+            onOperatorClick("-")
+        }
+
+        findViewById<Button>(R.id.btnMul).setOnClickListener {
+            onOperatorClick("*")
+        }
+
+        findViewById<Button>(R.id.btnDiv).setOnClickListener {
+            onOperatorClick("/")
+        }
+
+        findViewById<Button>(R.id.btnEqual).setOnClickListener {
+            calculateResult()
+        }
+
+        findViewById<Button>(R.id.btnClear).setOnClickListener {
+            clear()
+        }
+
+        findViewById<Button>(R.id.btnDot).setOnClickListener {
+            onDotClick()
+        }
+    }
+
+    private fun onNumberClick(number: String) {
+        if (isNewNumber) {
+            display.text = number
+            isNewNumber = false
+        } else {
+            display.text = display.text.toString() + number
+        }
+    }
+
+    private fun onDotClick() {
+        if (isNewNumber) {
+            display.text = "0."
+            isNewNumber = false
+        } else if (!display.text.contains(".")) {
+            display.text = display.text.toString() + "."
+        }
+    }
+
+    private fun onOperatorClick(op: String) {
+        firstNumber = display.text.toString().toDouble()
+        operation = op
+        isNewNumber = true
+    }
+
+    private fun calculateResult() {
+        val secondNumber = display.text.toString().toDouble()
+
+        val result = when (operation) {
+            "+" -> firstNumber + secondNumber
+            "-" -> firstNumber - secondNumber
+            "*" -> firstNumber * secondNumber
+            "/" -> firstNumber / secondNumber
+            else -> secondNumber
+        }
+
+        display.text = result.toString()
+        isNewNumber = true
+    }
+
+    private fun clear() {
+        display.text = "0"
+        firstNumber = 0.0
+        operation = ""
+        isNewNumber = true
+    }
+}
+    
+
+</LinearLayout>
